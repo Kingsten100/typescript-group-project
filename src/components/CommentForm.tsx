@@ -1,17 +1,18 @@
-import React, { useState, type FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { useForum } from '../context/ForumContext'
+import { useUser } from '../context/UserContext'
 import type { Comment } from '../types/types'
 import { useParams } from 'react-router-dom'
 
 const CommentForm = () => {
   const { addComment } = useForum()
+  const { currentUser } = useUser()
   const { id } = useParams<{ id: string }>();
 
   const [content, setContent] = useState('')
-  const [commentAuthor, setCommentAuthor] = useState('')
   
   if(!id) {
-    return <p>Inget id hittades</p>
+    return <p>No thread ID found</p>
   }
   
   const handleSubmit = (e: FormEvent) => {
@@ -20,30 +21,34 @@ const CommentForm = () => {
     const comment: Comment = {
       id: crypto.randomUUID(),
       threadId: id,
-      author: commentAuthor,
+      author: currentUser.username,
       content: content,
-      creationDate: new Date().toISOString().split('T')[0]
+      creationDate: new Date().toISOString().split('T')[0],
+      replies: []
     }
     addComment(id, comment)
 
-    setCommentAuthor('')
     setContent('')
-
   }
-
 
   return (
     <div>
       <form onSubmit={handleSubmit} className='comment-form-container'>
-        <div className='comment-form-input'>
-          <input placeholder='Ditt namn...' className='input' type="text" id='comment-author' value={commentAuthor} onChange={(e) => setCommentAuthor(e.target.value)} required/>
+        <div className='comment-form-header'>
+          <span className='commenting-as'>Comment as {currentUser.username}</span>
         </div>
         <div className='comment-form-input'>
-        <textarea placeholder='Vad vill du dela med dig?' className='input comment-textbox' id='comment' value={content} onChange={(e) => setContent(e.target.value)} required/>
+          <textarea 
+            placeholder='Delta i samtalet' 
+            className='input comment-textbox' 
+            id='comment' 
+            value={content} 
+            onChange={(e) => setContent(e.target.value)} 
+            required
+          />
         </div>
-        <button className='comment-submit-btn' type='submit'>Kommentera</button>
+        <button className='comment-submit-btn' type='submit'>Comment</button>
       </form>
-      
     </div>
   )
 }
