@@ -1,50 +1,54 @@
 import React, { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { useUser } from '../context/UserContext'
 
 const Navbar = () => {
-  const [open, setOpen] = useState(false)
+  const { currentUser, switchUser, availableUsers } = useUser();
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
-  const closeMenu = () => setOpen(false)
   return (
-    <>
-      <div className='navbar-container'>
-
-        <div>
-          <Link to={'/'} className='logo-link'>
-            <h2>TrådHimlen</h2>
-          </Link>
-        </div>
-        <div className='navbar-btns'>
-          <NavLink to='/create' className={({ isActive }) => (isActive ? 'navbar-btn active' : 'navbar-btn')}>Skapa ny tråd</NavLink>
-          <button onClick={() => setOpen(!open)} className='navbar-user'>
-            <img src="../../public/UserIcon.svg" alt="" />
-          </button>
-          {
-            open && (
-              <>
-                <div onClick={closeMenu} className='dropdown-overlay'>
-                  
-                </div>
-
-                <div className='dropdown-menu'>
-                  <h4 className='min-sida'>Min sida</h4>
-                  
-                  <ul>
-                    <li >
-                      <Link onClick={closeMenu} className='dropdown-link-text' to='/myThreads'>Mina trådar</Link>
-                    </li>
-                  </ul>
-                </div>
-              
-              </>
-            )
-          }
-          <button className='navbar-btn'>Logga ut</button>
-        </div>
+    <nav className='navbar'>
+      <div className='navbar-brand'>
+        <Link to='/' className='brand-link'>
+          <h1>LOGGA</h1>
+        </Link>
       </div>
-      <div className='navbar-divider'/>
-    
-    </>
+      
+      <div className='navbar-center'>
+        <button className='navbar-btn'>Sök</button>
+        <Link to='/create' className='navbar-btn create-btn'>Skapa ny tråd</Link>
+      </div>
+      
+      <div className='navbar-user'>
+        <div className='user-menu'>
+          <button 
+            className='navbar-user-icon'
+            onClick={() => setShowUserMenu(!showUserMenu)}
+          >
+            <img src='../public/UserIcon.svg' alt="User" />
+          </button>
+          
+          {showUserMenu && (
+            <div className='user-dropdown'>
+              <div className='dropdown-header'>Switch User (Demo)</div>
+              {availableUsers.map(user => (
+                <button
+                  key={user.id}
+                  className={`user-option ${user.id === currentUser.id ? 'active' : ''}`}
+                  onClick={() => {
+                    switchUser(user.id);
+                    setShowUserMenu(false);
+                  }}
+                >
+                  {user.username}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <button className='navbar-btn logout-btn'>Logga ut</button>
+      </div>
+    </nav>
   )
 }
 

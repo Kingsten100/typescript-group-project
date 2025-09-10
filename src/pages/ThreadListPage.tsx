@@ -3,7 +3,10 @@ import ThreadList from '../components/ThreadList'
 
 const ThreadListPage = () => {
   return (
-    <div>
+    <div className='thread-list-page'>
+      <div className='page-header'>
+        <h2>Senaste</h2>
+      </div>
       <ThreadList />
     </div>
   )

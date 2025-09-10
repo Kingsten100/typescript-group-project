@@ -1,25 +1,20 @@
 // components/Layout.tsx
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 
 const Layout = () => {
   return (
-    <>
-    <header>
+    <div className='layout'>
       <Navbar />
-    </header>
-      <div className="layout-container">
-        <aside className="sidebar-container">
-          <Sidebar />
-        </aside>
-  
-        <main className="main-container">
-          <Outlet /> 
-        </main>
+      <div className='main-content'>
+        <Sidebar />
+        <div className='content'>
+          <Outlet />
+        </div>
       </div>
-    </>
+    </div>
   )
 };
 

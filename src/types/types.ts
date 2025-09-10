@@ -1,21 +1,23 @@
 export type User = {
-  id: string; // ändrat till string
+  id: string;
   username: string;
   email: string;
 };
 
 export type Comment = {
-  id: string; // ändrat till string
+  id: string;
   threadId: string;
+  parentCommentId?: string; // For nested replies
   author: string;
   content: string;
   creationDate: string;
+  replies?: Comment[]; // Nested replies
 };
 
 export type Thread = {
   id: string;
   title: string;
-  category: "general" | "QNA"; // mer strikt typ
+  category: "general" | "QNA";
   content: string;
   creator: User;
   creationDate: string;
@@ -25,5 +27,5 @@ export type Thread = {
 export type QNAThread = Thread & {
   category: "QNA";
   isAnswered: boolean;
-  commentAnswerId?: string; // ändrat till string
+  commentAnswerId?: string;
 };
